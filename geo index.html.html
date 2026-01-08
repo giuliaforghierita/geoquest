@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069)file:///C:/Users/GiuliaForghieri-Euro/Downloads/geography-quiz_4.html -->
+<html lang="it"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧭 GeoQuest - Esplora il Mondo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .logo {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: inline-block;
+        }
+
+        .explorer {
+            font-size: 35px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .magnifier {
+            font-size: 28px;
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            animation: tilt 2s ease-in-out infinite;
+            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.2));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes tilt {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .mode-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .mode-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .mode-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .quiz-container {
+            display: none;
+        }
+
+        .quiz-container.active {
+            display: block;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .question-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 1.4em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .flag-display {
+            margin: 20px 0;
+            line-height: 1;
+        }
+
+        .flag-display img {
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 3px solid #e0e0e0;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+            background: #f5f7ff;
+            transform: scale(1.02);
+        }
+
+        .option-btn.correct {
+            background: #4caf50;
+            color: white;
+            border-color: #4caf50;
+            animation: pulse 0.5s;
+        }
+
+        .option-btn.wrong {
+            background: #f44336;
+            color: white;
+            border-color: #f44336;
+            animation: shake 0.5s;
+        }
+
+        .option-btn.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .flag-option {
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100px;
+        }
+
+        .flag-option img {
+            max-width: 120px;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feedback.show {
+            opacity: 1;
+        }
+
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .feedback.wrong {
+            background: #ffebee;
+            color: #f44336;
+        }
+
+        .next-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+            display: none;
+        }
+
+        .next-btn.show {
+            display: block;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .game-over {
+            text-align: center;
+            display: none;
+        }
+
+        .game-over.show {
+            display: block;
+        }
+
+        .final-score {
+            font-size: 3em;
+            color: #667eea;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .back-btn {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 1em;
+        }
+
+        .back-btn:hover {
+            background: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span class="logo">
+                <span class="explorer">🤠</span>
+                <span class="magnifier">🔍</span>
+            </span>
+            GeoQuest
+        </h1>
+        <p class="subtitle">Diventa un esploratore del mondo!</p>
+
+        <div id="modeSelection" class="mode-selection">
+            <button class="mode-btn" onclick="showDifficultySelection(&#39;countryToCapital&#39;)">
+                🏛️<br>Caccia alla Capitale<br><small style="font-size: 0.75em; opacity: 0.8;">Trova la città principale</small>
+            </button>
+            <button class="mode-btn" onclick="showDifficultySelection(&#39;capitalToCountry&#39;)">
+                🗺️<br>Scopri il Paese<br><small style="font-size: 0.75em; opacity: 0.8;">Da capitale a nazione</small>
+            </button>
+            <button class="mode-btn" onclick="showDifficultySelection(&#39;countryToFlag&#39;)">
+                🚩<br>Missione Bandiera<br><small style="font-size: 0.75em; opacity: 0.8;">Riconosci i colori</small>
+            </button>
+            <button class="mode-btn" onclick="showDifficultySelection(&#39;flagToCountry&#39;)">
+                🌐<br>Decoder Bandiere<br><small style="font-size: 0.75em; opacity: 0.8;">Dai colori al paese</small>
+            </button>
+        </div>
+
+        <div id="difficultySelection" class="mode-selection" style="display: none;">
+            <button class="back-btn" onclick="backToModeSelection()" style="grid-column: 1 / -1; margin-bottom: 10px;">← Indietro</button>
+            <button class="mode-btn" onclick="startGame(&#39;easy&#39;)" style="background: linear-gradient(135deg, #52c234 0%, #3a9d23 100%);">
+                🏕️<br>TURISTA<br><small style="font-size: 0.8em; opacity: 0.9;">Destinazioni famose</small>
+            </button>
+            <button class="mode-btn" onclick="startGame(&#39;medium&#39;)" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+                🎒<br>VIAGGIATORE<br><small style="font-size: 0.8em; opacity: 0.9;">Avventura moderata</small>
+            </button>
+            <button class="mode-btn" onclick="startGame(&#39;hard&#39;)" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+                🧗<br>ESPLORATORE<br><small style="font-size: 0.8em; opacity: 0.9;">Territori inesplorati</small>
+            </button>
+            <button class="mode-btn" onclick="startGame(&#39;expert&#39;)" style="background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);">
+                🗺️<br>CARTOGRAFO<br><small style="font-size: 0.8em; opacity: 0.9;">Solo per esperti!</small>
+            </button>
+        </div>
+
+        <div id="quizContainer" class="quiz-container">
+            <button class="back-btn" onclick="backToMenu()">← Menu</button>
+            
+            <div class="score-board">
+                <div class="score-item">
+                    <div class="score-label">Corrette</div>
+                    <div class="score-value" id="correct">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Domanda</div>
+                    <div class="score-value" id="question">1/10</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Sbagliate</div>
+                    <div class="score-value" id="wrong">0</div>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-text" id="questionText"></div>
+                <div class="flag-display" id="flagDisplay"></div>
+            </div>
+
+            <div class="options" id="options"></div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+                Prossima Domanda →
+            </button>
+        </div>
+
+        <div id="gameOver" class="game-over">
+            <h2>🎯 Missione Completata!</h2>
+            <div class="final-score" id="finalScore"></div>
+            <p id="performance"></p>
+            <button class="restart-btn" onclick="backToMenu()">🧭 Nuova Avventura</button>
+        </div>
+    </div>
+
+    <script>
+        const countriesEasy = [
+            { name: "Italia", capital: "Roma", code: "it" },
+            { name: "Francia", capital: "Parigi", code: "fr" },
+            { name: "Germania", capital: "Berlino", code: "de" },
+            { name: "Spagna", capital: "Madrid", code: "es" },
+            { name: "Regno Unito", capital: "Londra", code: "gb" },
+            { name: "Stati Uniti", capital: "Washington D.C.", code: "us" },
+            { name: "Giappone", capital: "Tokyo", code: "jp" },
+            { name: "Cina", capital: "Pechino", code: "cn" },
+            { name: "Brasile", capital: "Brasilia", code: "br" },
+            { name: "Argentina", capital: "Buenos Aires", code: "ar" },
+            { name: "Canada", capital: "Ottawa", code: "ca" },
+            { name: "Australia", capital: "Canberra", code: "au" },
+            { name: "India", capital: "Nuova Delhi", code: "in" },
+            { name: "Russia", capital: "Mosca", code: "ru" },
+            { name: "Messico", capital: "Città del Messico", code: "mx" },
+            { name: "Egitto", capital: "Il Cairo", code: "eg" },
+            { name: "Grecia", capital: "Atene", code: "gr" },
+            { name: "Portogallo", capital: "Lisbona", code: "pt" },
+            { name: "Paesi Bassi", capital: "Amsterdam", code: "nl" },
+            { name: "Svezia", capital: "Stoccolma", code: "se" }
+        ];
+
+        const countriesMedium = [
+            { name: "Norvegia", capital: "Oslo", code: "no" },
+            { name: "Danimarca", capital: "Copenaghen", code: "dk" },
+            { name: "Finlandia", capital: "Helsinki", code: "fi" },
+            { name: "Polonia", capital: "Varsavia", code: "pl" },
+            { name: "Turchia", capital: "Ankara", code: "tr" },
+            { name: "Sudafrica", capital: "Pretoria", code: "za" },
+            { name: "Nuova Zelanda", capital: "Wellington", code: "nz" },
+            { name: "Corea del Sud", capital: "Seul", code: "kr" },
+            { name: "Thailandia", capital: "Bangkok", code: "th" },
+            { name: "Vietnam", capital: "Hanoi", code: "vn" },
+            { name: "Indonesia", capital: "Giacarta", code: "id" },
+            { name: "Filippine", capital: "Manila", code: "ph" },
+            { name: "Malaysia", capital: "Kuala Lumpur", code: "my" },
+            { name: "Singapore", capital: "Singapore", code: "sg" },
+            { name: "Arabia Saudita", capital: "Riyad", code: "sa" },
+            { name: "Emirati Arabi Uniti", capital: "Abu Dhabi", code: "ae" },
+            { name: "Israele", capital: "Gerusalemme", code: "il" },
+            { name: "Svizzera", capital: "Berna", code: "ch" },
+            { name: "Austria", capital: "Vienna", code: "at" },
+            { name: "Belgio", capital: "Bruxelles", code: "be" },
+            { name: "Irlanda", capital: "Dublino", code: "ie" },
+            { name: "Croazia", capital: "Zagabria", code: "hr" },
+            { name: "Romania", capital: "Bucarest", code: "ro" },
+            { name: "Ungheria", capital: "Budapest", code: "hu" },
+            { name: "Repubblica Ceca", capital: "Praga", code: "cz" },
+            { name: "Cile", capital: "Santiago", code: "cl" },
+            { name: "Colombia", capital: "Bogotà", code: "co" },
+            { name: "Perù", capital: "Lima", code: "pe" },
+            { name: "Venezuela", capital: "Caracas", code: "ve" },
+            { name: "Nigeria", capital: "Abuja", code: "ng" }
+        ];
+
+        const countriesHard = [
+            { name: "Kenya", capital: "Nairobi", code: "ke" },
+            { name: "Marocco", capital: "Rabat", code: "ma" },
+            { name: "Algeria", capital: "Algeri", code: "dz" },
+            { name: "Pakistan", capital: "Islamabad", code: "pk" },
+            { name: "Bangladesh", capital: "Dacca", code: "bd" },
+            { name: "Ucraina", capital: "Kiev", code: "ua" },
+            { name: "Iraq", capital: "Baghdad", code: "iq" },
+            { name: "Iran", capital: "Teheran", code: "ir" },
+            { name: "Etiopia", capital: "Addis Abeba", code: "et" },
+            { name: "Islanda", capital: "Reykjavik", code: "is" },
+            { name: "Bulgaria", capital: "Sofia", code: "bg" },
+            { name: "Serbia", capital: "Belgrado", code: "rs" },
+            { name: "Slovacchia", capital: "Bratislava", code: "sk" },
+            { name: "Slovenia", capital: "Lubiana", code: "si" },
+            { name: "Lituania", capital: "Vilnius", code: "lt" },
+            { name: "Lettonia", capital: "Riga", code: "lv" },
+            { name: "Estonia", capital: "Tallinn", code: "ee" },
+            { name: "Bielorussia", capital: "Minsk", code: "by" },
+            { name: "Kazakistan", capital: "Astana", code: "kz" },
+            { name: "Uzbekistan", capital: "Tashkent", code: "uz" },
+            { name: "Myanmar", capital: "Naypyidaw", code: "mm" },
+            { name: "Cambogia", capital: "Phnom Penh", code: "kh" },
+            { name: "Laos", capital: "Vientiane", code: "la" },
+            { name: "Nepal", capital: "Kathmandu", code: "np" },
+            { name: "Sri Lanka", capital: "Colombo", code: "lk" },
+            { name: "Afghanistan", capital: "Kabul", code: "af" },
+            { name: "Siria", capital: "Damasco", code: "sy" },
+            { name: "Giordania", capital: "Amman", code: "jo" },
+            { name: "Libano", capital: "Beirut", code: "lb" },
+            { name: "Kuwait", capital: "Città del Kuwait", code: "kw" }
+        ];
+
+        const countriesExpert = [
+            { name: "Qatar", capital: "Doha", code: "qa" },
+            { name: "Bahrein", capital: "Manama", code: "bh" },
+            { name: "Oman", capital: "Mascate", code: "om" },
+            { name: "Yemen", capital: "Sana'a", code: "ye" },
+            { name: "Tunisia", capital: "Tunisi", code: "tn" },
+            { name: "Libia", capital: "Tripoli", code: "ly" },
+            { name: "Ghana", capital: "Accra", code: "gh" },
+            { name: "Tanzania", capital: "Dodoma", code: "tz" },
+            { name: "Uganda", capital: "Kampala", code: "ug" },
+            { name: "Senegal", capital: "Dakar", code: "sn" },
+            { name: "Costa d'Avorio", capital: "Yamoussoukro", code: "ci" },
+            { name: "Camerun", capital: "Yaoundé", code: "cm" },
+            { name: "Angola", capital: "Luanda", code: "ao" },
+            { name: "Mozambico", capital: "Maputo", code: "mz" },
+            { name: "Zimbabwe", capital: "Harare", code: "zw" },
+            { name: "Zambia", capital: "Lusaka", code: "zm" },
+            { name: "Botswana", capital: "Gaborone", code: "bw" },
+            { name: "Namibia", capital: "Windhoek", code: "na" },
+            { name: "Uruguay", capital: "Montevideo", code: "uy" },
+            { name: "Paraguay", capital: "Asunción", code: "py" },
+            { name: "Bolivia", capital: "La Paz", code: "bo" },
+            { name: "Ecuador", capital: "Quito", code: "ec" },
+            { name: "Guatemala", capital: "Città del Guatemala", code: "gt" },
+            { name: "Cuba", capital: "L'Avana", code: "cu" },
+            { name: "Repubblica Dominicana", capital: "Santo Domingo", code: "do" },
+            { name: "Panama", capital: "Città di Panama", code: "pa" },
+            { name: "Costa Rica", capital: "San José", code: "cr" },
+            { name: "Nicaragua", capital: "Managua", code: "ni" },
+            { name: "Honduras", capital: "Tegucigalpa", code: "hn" },
+            { name: "El Salvador", capital: "San Salvador", code: "sv" },
+            { name: "Kirghizistan", capital: "Bishkek", code: "kg" },
+            { name: "Tagikistan", capital: "Dushanbe", code: "tj" },
+            { name: "Turkmenistan", capital: "Ashgabat", code: "tm" },
+            { name: "Mongolia", capital: "Ulan Bator", code: "mn" },
+            { name: "Bhutan", capital: "Thimphu", code: "bt" },
+            { name: "Brunei", capital: "Bandar Seri Begawan", code: "bn" },
+            { name: "Maldive", capital: "Malé", code: "mv" },
+            { name: "Fiji", capital: "Suva", code: "fj" },
+            { name: "Papua Nuova Guinea", capital: "Port Moresby", code: "pg" },
+            { name: "Lussemburgo", capital: "Lussemburgo", code: "lu" }
+        ];
+
+        function getFlagUrl(countryCode) {
+            return `https://flagcdn.com/w320/${countryCode}.png`;
+        }
+
+        let selectedMode = '';
+        let gameMode = '';
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let questionsPool = [];
+        let currentAnswer = null;
+
+        function showDifficultySelection(mode) {
+            selectedMode = mode;
+            document.getElementById('modeSelection').style.display = 'none';
+            document.getElementById('difficultySelection').style.display = 'grid';
+        }
+
+        function backToModeSelection() {
+            document.getElementById('modeSelection').style.display = 'grid';
+            document.getElementById('difficultySelection').style.display = 'none';
+        }
+
+        function startGame(difficulty) {
+            gameMode = selectedMode;
+            currentQuestion = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            
+            // Seleziona i paesi in base alla difficoltà
+            let countries = [];
+            switch(difficulty) {
+                case 'easy':
+                    countries = countriesEasy;
+                    break;
+                case 'medium':
+                    countries = [...countriesEasy, ...countriesMedium];
+                    break;
+                case 'hard':
+                    countries = [...countriesEasy, ...countriesMedium, ...countriesHard];
+                    break;
+                case 'expert':
+                    countries = countriesExpert;
+                    break;
+            }
+            
+            // Seleziona 10 paesi casuali
+            questionsPool = [...countries].sort(() => Math.random() - 0.5).slice(0, 10);
+            
+            document.getElementById('difficultySelection').style.display = 'none';
+            document.getElementById('quizContainer').classList.add('active');
+            document.getElementById('gameOver').classList.remove('show');
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentQuestion >= 10) {
+                showGameOver();
+                return;
+            }
+
+            const current = questionsPool[currentQuestion];
+            currentAnswer = null;
+            
+            document.getElementById('correct').textContent = correctAnswers;
+            document.getElementById('wrong').textContent = wrongAnswers;
+            document.getElementById('question').textContent = `${currentQuestion + 1}/10`;
+            
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('nextBtn').classList.remove('show');
+            document.getElementById('flagDisplay').innerHTML = '';
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            // Prendi le opzioni sbagliate dallo stesso pool di domande
+            let wrongOptions = questionsPool.filter(c => c !== current)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3);
+            
+            let options = [current, ...wrongOptions].sort(() => Math.random() - 0.5);
+            
+            switch(gameMode) {
+                case 'countryToCapital':
+                    document.getElementById('questionText').textContent = 
+                        `Qual è la capitale di ${current.name}?`;
+                    currentAnswer = current.capital;
+                    options.forEach(country => {
+                        createOptionButton(country.capital, country.capital === current.capital);
+                    });
+                    break;
+                    
+                case 'capitalToCountry':
+                    document.getElementById('questionText').textContent = 
+                        `${current.capital} è la capitale di quale paese?`;
+                    currentAnswer = current.name;
+                    options.forEach(country => {
+                        createOptionButton(country.name, country.name === current.name);
+                    });
+                    break;
+                    
+                case 'countryToFlag':
+                    document.getElementById('questionText').textContent = 
+                        `Qual è la bandiera di ${current.name}?`;
+                    currentAnswer = current.code;
+                    options.forEach(country => {
+                        createFlagOption(country.code, country.code === current.code);
+                    });
+                    break;
+                    
+                case 'flagToCountry':
+                    document.getElementById('questionText').textContent = 
+                        `A quale paese appartiene questa bandiera?`;
+                    const flagImg = document.createElement('img');
+                    flagImg.src = getFlagUrl(current.code);
+                    flagImg.alt = `Bandiera di ${current.name}`;
+                    document.getElementById('flagDisplay').appendChild(flagImg);
+                    currentAnswer = current.name;
+                    options.forEach(country => {
+                        createOptionButton(country.name, country.name === current.name);
+                    });
+                    break;
+            }
+        }
+
+        function createOptionButton(text, isCorrect) {
+            const button = document.createElement('button');
+            button.className = 'option-btn';
+            button.textContent = text;
+            button.onclick = () => checkAnswer(button, isCorrect, text);
+            document.getElementById('options').appendChild(button);
+        }
+
+        function createFlagOption(countryCode, isCorrect) {
+            const button = document.createElement('button');
+            button.className = 'option-btn flag-option';
+            const img = document.createElement('img');
+            img.src = getFlagUrl(countryCode);
+            img.alt = 'Bandiera';
+            button.appendChild(img);
+            button.onclick = () => checkAnswer(button, isCorrect, countryCode);
+            document.getElementById('options').appendChild(button);
+        }
+
+        function checkAnswer(button, isCorrect, answer) {
+            const allButtons = document.querySelectorAll('.option-btn');
+            allButtons.forEach(btn => btn.classList.add('disabled'));
+            
+            const feedback = document.getElementById('feedback');
+            
+            if (isCorrect) {
+                button.classList.add('correct');
+                correctAnswers++;
+                feedback.textContent = '✓ Corretto!';
+                feedback.className = 'feedback correct show';
+            } else {
+                button.classList.add('wrong');
+                wrongAnswers++;
+                
+                // Find the correct answer display text
+                let correctAnswerText = currentAnswer;
+                if (gameMode === 'countryToFlag') {
+                    const correctCountry = questionsPool[currentQuestion];
+                    correctAnswerText = `la bandiera di ${correctCountry.name}`;
+                }
+                
+                feedback.textContent = `✗ Sbagliato! La risposta corretta era: ${correctAnswerText}`;
+                feedback.className = 'feedback wrong show';
+                
+                // Evidenzia la risposta corretta
+                allButtons.forEach(btn => {
+                    if (gameMode === 'countryToFlag' || gameMode === 'flagToCountry') {
+                        // For flag questions, we need to check the image or code
+                        const img = btn.querySelector('img');
+                        if (img && img.src.includes(questionsPool[currentQuestion].code)) {
+                            btn.classList.add('correct');
+                        }
+                    } else if (btn.textContent === currentAnswer) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+            
+            document.getElementById('nextBtn').classList.add('show');
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function showGameOver() {
+            document.getElementById('quizContainer').classList.remove('active');
+            document.getElementById('gameOver').classList.add('show');
+            
+            const percentage = Math.round((correctAnswers / 10) * 100);
+            document.getElementById('finalScore').textContent = `${correctAnswers}/10`;
+            
+            let performance = '';
+            if (percentage === 100) {
+                performance = '🏆 PERFETTO! Sei un Maestro Cartografo!';
+            } else if (percentage >= 80) {
+                performance = '⭐ OTTIMO! Hai le qualità di un vero Esploratore!';
+            } else if (percentage >= 60) {
+                performance = '🎒 BRAVO! Sei un Viaggiatore esperto!';
+            } else if (percentage >= 40) {
+                performance = '🏕️ NON MALE! Continua la tua esplorazione!';
+            } else {
+                performance = '🧭 Ogni grande esploratore inizia da qui!';
+            }
+            
+            document.getElementById('performance').textContent = performance;
+        }
+
+        function backToMenu() {
+            document.getElementById('modeSelection').style.display = 'grid';
+            document.getElementById('quizContainer').classList.remove('active');
+            document.getElementById('gameOver').classList.remove('show');
+        }
+    </script>
+
+
+</body></html>
